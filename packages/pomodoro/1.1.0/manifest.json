@@ -1,0 +1,14 @@
+{
+    "id": "pomodoro",
+    "name": "Pomodoro",
+    "version": "1.1.0",
+    "description": "Focus timer drawn with native controls (25/5 by default); counts finished sessions per day.",
+    "author": "AIDE",
+    "render": "native",
+    "tabs": [{ "id": "timer", "title": "Focus", "icon": "timer" }],
+    "capabilities": ["storage"],
+    "settings": [
+        { "key": "focusMinutes", "title": "Focus minutes", "type": "number", "help": "Default 25" },
+        { "key": "breakMinutes", "title": "Break minutes", "type": "number", "help": "Default 5" }
+    ]
+}

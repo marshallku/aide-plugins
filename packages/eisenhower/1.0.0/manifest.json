@@ -1,0 +1,10 @@
+{
+    "id": "eisenhower",
+    "name": "Eisenhower matrix",
+    "version": "1.0.0",
+    "description": "Open todos sorted into do / schedule / delegate / drop by priority and due date.",
+    "author": "AIDE",
+    "render": "web",
+    "tabs": [{ "id": "matrix", "title": "Matrix", "icon": "square.grid.2x2" }],
+    "capabilities": ["todos:read", "todos:write"]
+}

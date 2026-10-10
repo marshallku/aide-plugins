@@ -1,0 +1,12 @@
+{
+    "id": "word-count",
+    "name": "Word count",
+    "version": "1.0.0",
+    "description": "Counts the words of the note you're reading, from the editor's plugin menu.",
+    "author": "AIDE",
+    "render": "web",
+    "tabs": [],
+    "sheets": [{ "id": "count", "title": "Word count", "icon": "textformat.size" }],
+    "settingsPage": { "title": "Counting options" },
+    "capabilities": ["notes:read:*", "storage"]
+}

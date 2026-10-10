@@ -1,0 +1,6 @@
+:root { color-scheme: light dark; font: -apple-system-body; }
+body { margin: 0; padding: 20px; font-family: -apple-system, system-ui; }
+.big { font-size: 44px; font-weight: 700; margin: 8px 0; }
+.hint { color: #888; margin: 4px 0; }
+label { display: flex; gap: 10px; align-items: center; font-size: 17px; }
+button { margin-top: 24px; font-size: 17px; padding: 10px 18px; border-radius: 10px; border: none; background: #0a84ff; color: white; }
