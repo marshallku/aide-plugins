@@ -22,12 +22,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           base="${{ github.event.pull_request.base.sha }}"
-          git diff --name-only --diff-filter=AMR "$base" HEAD -- 'submissions/*.json' > changed.txt
-          if git diff --name-only --diff-filter=D "$base" HEAD -- submissions packages | grep .; then
-            echo "::error::submissions and published packages are never deleted"; exit 1
+          # Submissions and packages are append-only: only new files (no renames, edits or deletions).
+          if git diff --no-renames --name-status "$base" HEAD -- submissions packages revoked.json | grep -v '^A' | grep -v 'revoked.json$' | grep .; then
+            echo "::error::existing submissions and packages never change; add a new version instead"; exit 1
           fi
-          if git diff --name-only "$base" HEAD -- packages | grep .; then
+          if git diff --no-renames --name-only "$base" HEAD -- packages | grep .; then
             echo "::error::packages/ is written by the publish workflow only"; exit 1
           fi
+          git diff --no-renames --name-only --diff-filter=A "$base" HEAD -- 'submissions/*.json' > changed.txt
           python3 scripts/index.py site /tmp/site
-          if [ -s changed.txt ]; then python3 scripts/index.py check $(cat changed.txt); fi
+          if [ -s changed.txt ]; then python3 scripts/index.py check "$base" $(cat changed.txt); fi

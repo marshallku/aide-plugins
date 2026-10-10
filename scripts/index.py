@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Checks submissions and builds the AIDE plugin index.
 
-    index.py check <submission.json>...   verify submissions (PR CI); writes a review report
+    index.py check <base-sha> <submission.json>...   verify new submissions (PR CI); writes a review report
     index.py publish                      copy every verified submission into packages/ (main CI)
     index.py site <out>                   write the Pages site: packages/ + plugins.json
 
@@ -79,6 +79,21 @@ def submissions():
     return out
 
 
+def base_submissions(base):
+    """Submissions as of the PR's base commit, which the PR can't have changed."""
+    listing = subprocess.run(["git", "ls-tree", "-r", "--name-only", base, "submissions/"],
+                             capture_output=True, text=True, check=True, cwd=ROOT).stdout.split()
+    out = []
+    for name in listing:
+        parts = Path(name).parts
+        if len(parts) != 3 or not name.endswith(".json"):
+            continue
+        data = json.loads(subprocess.run(["git", "show", f"{base}:{name}"], capture_output=True, text=True,
+                                         check=True, cwd=ROOT).stdout)
+        out.append({"id": parts[1], "version": parts[2][: -len(".json")], **data})
+    return out
+
+
 def owner_check(sub, all_subs):
     """One id belongs to one repo: the first submission's."""
     for other in all_subs:
@@ -98,6 +113,14 @@ def fetch(sub, into):
 
 
 def verify(sub, folder):
+    for file in folder.iterdir():
+        data = file.read_bytes()
+        try:
+            text = data.decode("utf-8")
+        except UnicodeDecodeError:
+            raise Refused(f"{file.name} isn't UTF-8 text, so it can't be reviewed")
+        if "\x00" in text:
+            raise Refused(f"{file.name} contains NUL bytes, so it can't be reviewed")
     report = run_checker(folder)
     if report["id"] != sub["id"] or report["version"] != sub["version"]:
         raise Refused(f"the package is {report['id']} {report['version']}, the submission says {sub['id']} {sub['version']}")
@@ -126,17 +149,19 @@ def previous_version(sub, all_subs):
 
 
 def diff(old, new):
-    result = subprocess.run(["diff", "-ruN", str(old), str(new)], capture_output=True, text=True)
+    result = subprocess.run(["diff", "-ruNa", str(old), str(new)], capture_output=True, text=True)
     return result.stdout
 
 
-def cmd_check(paths):
+def cmd_check(base, paths):
+    trusted = base_submissions(base)
     all_subs = submissions()
     report = ["# Plugin submission review", ""]
     failed = False
     for path in paths:
         try:
             sub = read_submission(path)
+            owner_check(sub, trusted)
             owner_check(sub, all_subs)
             with tempfile.TemporaryDirectory() as tmp:
                 folder = Path(tmp) / "package"
@@ -147,11 +172,12 @@ def cmd_check(paths):
                 report += [f"## ✅ {info['id']} {info['version']}", "",
                            f"- From `{sub['repo']}` @ `{sub['tag']}`, hash `{info['hash']}`",
                            f"- {info.get('name')}: {info.get('description', '')}",
-                           f"- Capabilities: {', '.join(info['capabilities']) or '(none)'}"]
+                           f"- Capabilities: {', '.join(info.get('capabilities', [])) or '(none)'}"]
                 previous = previous_version(sub, all_subs)
                 if previous:
-                    before = set(run_checker(published(previous))["capabilities"])
-                    added, removed = set(info["capabilities"]) - before, before - set(info["capabilities"])
+                    before = set(run_checker(published(previous)).get("capabilities", []))
+                    now = set(info.get("capabilities", []))
+                    added, removed = now - before, before - now
                     report.append(f"- Since {previous['version']}: added {sorted(added) or 'nothing'}, removed {sorted(removed) or 'nothing'}")
                     changes = diff(published(previous), folder)
                 else:
@@ -230,7 +256,7 @@ def cmd_site(out):
         entry = {"id": plugin_id, "name": info["name"], "description": info.get("description", ""),
                  "repo": f"https://github.com/{sub['repo']}", "version": sub["version"], "hash": info["hash"],
                  "url": f"packages/{plugin_id}/{sub['version']}/", "files": info["files"],
-                 "capabilities": info["capabilities"]}
+                 "capabilities": info.get("capabilities", [])}
         if info.get("author"):
             entry["author"] = info["author"]
         plugins.append(entry)
@@ -248,8 +274,8 @@ def cmd_site(out):
 
 
 def main(argv):
-    if len(argv) >= 2 and argv[0] == "check":
-        return cmd_check(argv[1:])
+    if len(argv) >= 3 and argv[0] == "check":
+        return cmd_check(argv[1], argv[2:])
     if argv == ["publish"]:
         return cmd_publish()
     if len(argv) == 2 and argv[0] == "site":
