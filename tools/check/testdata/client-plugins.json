@@ -1,0 +1,339 @@
+{
+  "validate": [
+    {
+      "name": "minimal web package",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": "bf5b92e6e2475dc83a0f1f0fa0232b16c4340d446e0a5b46fe79ac4ab012fcf0",
+      "publish": true
+    },
+    {
+      "name": "everything optional",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"notes:read:daily\", \"notes:write:*\", \"net:api.example.com\", \"todos:read\", \"todos:write\", \"storage\"], \"author\": \"aide\", \"settings\": [{\"key\": \"minutes\", \"title\": \"Minutes\", \"type\": \"number\", \"help\": \"How long\"}, {\"key\": \"mode\", \"title\": \"Mode\", \"type\": \"enum\", \"options\": [\"a\", \"b\"]}], \"sheets\": [{\"id\": \"count\", \"title\": \"Count\", \"icon\": \"number\"}], \"settingsPage\": {\"title\": \"Options\"}}",
+        "main.js": "aide.render('hi')\n",
+        "index.html": "<p>hi</p>",
+        "styles.css": "p{}"
+      },
+      "hash": "f48b2186ece97b9ed0585dcca6e853cd86d26bc18f89e8de7cdbe8f4cffafe70",
+      "publish": true
+    },
+    {
+      "name": "native render",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"native\", \"tabs\": [], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": "f1b98827b378e17f25fb72556a673833786f6c7d3ae6194391fdd15c60cf8fbb",
+      "publish": true
+    },
+    {
+      "name": "author null is fine",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"], \"author\": null}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": "b77651c4484575581cfa710251d54449188b74364d9539082496371076ed5205",
+      "publish": true
+    },
+    {
+      "name": "unicode name",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"할 일 타이머\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": "ac4f1b3d512e46fc48814bfd86e53fa69f2df94e5e838e0ceda1ef3cc982184a",
+      "publish": true
+    },
+    {
+      "name": "missing main.js",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "extra file",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n",
+        "README.md": "x"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "id with capitals",
+      "files": {
+        "manifest.json": "{\"id\": \"Hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "id too short",
+      "files": {
+        "manifest.json": "{\"id\": \"h\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "unknown render",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"react\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "four tabs",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"t0a\", \"title\": \"T\", \"icon\": \"star\"}, {\"id\": \"t1a\", \"title\": \"T\", \"icon\": \"star\"}, {\"id\": \"t2a\", \"title\": \"T\", \"icon\": \"star\"}, {\"id\": \"t3a\", \"title\": \"T\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "duplicate tab ids",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"A\", \"icon\": \"star\"}, {\"id\": \"main\", \"title\": \"B\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "tab title over 20",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"xxxxxxxxxxxxxxxxxxxxx\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "tab without icon key",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"A\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "empty sheet icon",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"], \"sheets\": [{\"id\": \"main\", \"title\": \"A\", \"icon\": \"\"}]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "unknown capability",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"camera\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "non-canonical note scope",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"notes:read:Daily\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "bad net host",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"net:Example.com\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "setting key token",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"], \"settings\": [{\"key\": \"token\", \"title\": \"T\", \"type\": \"string\"}]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "enum without options",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"], \"settings\": [{\"key\": \"mode\", \"title\": \"M\", \"type\": \"enum\"}]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "setting without type",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"], \"settings\": [{\"key\": \"mode\", \"title\": \"M\"}]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "setting help over 300 bytes",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"], \"settings\": [{\"key\": \"mode\", \"title\": \"M\", \"type\": \"string\", \"help\": \"가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가\"}]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "setting title 80 bytes",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"], \"settings\": [{\"key\": \"mode\", \"title\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\", \"type\": \"string\"}]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": "a91e1c0fb1edf9ea53209ad55dd93d36612c50d53bd3db227ff5d696e43255aa",
+      "publish": true
+    },
+    {
+      "name": "settings page title over 30",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"], \"settingsPage\": {\"title\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "missing description",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "null name",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": null, \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "blank name",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"   \", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "version is a number",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": 1, \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "not json",
+      "files": {
+        "manifest.json": "{",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "free-form version installs but isn't publishable",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"v1\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": "fdca3eae4d4f87185d3fe7bae36de1bfdfaf4c0091c43f4dbc4bc3debc3f1ffd",
+      "publish": false
+    },
+    {
+      "name": "path-like version isn't publishable",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"../../x\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": "dbfa3d06971a45146790645a4be44d9fb4b34aada53c1deb3b620dce72b0726a",
+      "publish": false
+    },
+    {
+      "name": "prerelease version publishes",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"2.0.0-beta.1\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [{\"id\": \"main\", \"title\": \"Hello\", \"icon\": \"star\"}], \"capabilities\": [\"storage\"]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": "dde86f8d6326cf945f16434142a761965ddee2b2f7d20d4c9a000835c4019a55",
+      "publish": true
+    },
+    {
+      "name": "keys are case-sensitive (ID is an unknown key)",
+      "files": {
+        "manifest.json": "{\"id\":\"hello\",\"name\":\"Hello\",\"version\":\"1.0.0\",\"description\":\"Says hello\",\"render\":\"web\",\"tabs\":[{\"id\":\"main\",\"title\":\"Hello\",\"icon\":\"star\"}],\"capabilities\":[\"storage\"],\"ID\":\"other\",\"Capabilities\":[]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": "333ac2abb8ad84eddd60ae0afe307df83f2d6b3be4caf630c454e87deb97d7b6",
+      "publish": true
+    },
+    {
+      "name": "null option",
+      "files": {
+        "manifest.json": "{\"id\":\"hello\",\"name\":\"Hello\",\"version\":\"1.0.0\",\"description\":\"Says hello\",\"render\":\"web\",\"tabs\":[{\"id\":\"main\",\"title\":\"Hello\",\"icon\":\"star\"}],\"capabilities\":[\"storage\"],\"settings\":[{\"key\":\"mode\",\"title\":\"M\",\"type\":\"enum\",\"options\":[null]}]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "null capability",
+      "files": {
+        "manifest.json": "{\"id\":\"hello\",\"name\":\"Hello\",\"version\":\"1.0.0\",\"description\":\"d\",\"render\":\"web\",\"tabs\":[],\"capabilities\":[null]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "null tab",
+      "files": {
+        "manifest.json": "{\"id\":\"hello\",\"name\":\"Hello\",\"version\":\"1.0.0\",\"description\":\"d\",\"render\":\"web\",\"tabs\":[null],\"capabilities\":[]}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "settings page without title",
+      "files": {
+        "manifest.json": "{\"id\":\"hello\",\"name\":\"Hello\",\"version\":\"1.0.0\",\"description\":\"Says hello\",\"render\":\"web\",\"tabs\":[{\"id\":\"main\",\"title\":\"Hello\",\"icon\":\"star\"}],\"capabilities\":[\"storage\"],\"settingsPage\":{}}",
+        "main.js": "aide.render('hi')\n"
+      },
+      "hash": null,
+      "publish": false
+    }
+  ]
+}

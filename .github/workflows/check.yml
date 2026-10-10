@@ -1,0 +1,33 @@
+# Pull requests: verify changed submissions and write a review report (Checks → Summary).
+name: check
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: tools/check/go.mod
+      - name: Build and test the checker
+        working-directory: tools/check
+        run: go test ./... && go build -o aide-plugin-check .
+      - name: Check changed submissions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          base="${{ github.event.pull_request.base.sha }}"
+          git diff --name-only --diff-filter=AMR "$base" HEAD -- 'submissions/*.json' > changed.txt
+          if git diff --name-only --diff-filter=D "$base" HEAD -- submissions packages | grep .; then
+            echo "::error::submissions and published packages are never deleted"; exit 1
+          fi
+          if git diff --name-only "$base" HEAD -- packages | grep .; then
+            echo "::error::packages/ is written by the publish workflow only"; exit 1
+          fi
+          python3 scripts/index.py site /tmp/site
+          if [ -s changed.txt ]; then python3 scripts/index.py check $(cat changed.txt); fi

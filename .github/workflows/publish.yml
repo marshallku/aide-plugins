@@ -1,0 +1,57 @@
+# main: copy newly approved submissions into packages/ (verified against their hash), then build
+# and deploy the Pages site. One run at a time; each run publishes the newest main, and a run whose
+# main moved on before deploying leaves the deploy to the run queued behind it.
+name: publish
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+concurrency:
+  group: publish
+  cancel-in-progress: false
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: tools/check/go.mod
+      - name: Build the checker
+        working-directory: tools/check
+        run: go build -o aide-plugin-check .
+      - name: Publish approved submissions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/index.py publish
+          if [ -n "$(git status --porcelain packages)" ]; then
+            git config user.name "aide-plugins publisher"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add packages
+            git commit -m "publish approved submissions"
+            git push origin HEAD:main || { echo "main moved; the next run publishes"; exit 0; }
+          fi
+      - name: Build the site
+        run: python3 scripts/index.py site _site
+      - name: Skip if main moved
+        id: current
+        run: |
+          remote="$(git ls-remote origin refs/heads/main | cut -f1)"
+          if [ "$remote" = "$(git rev-parse HEAD)" ]; then echo "deploy=true" >> "$GITHUB_OUTPUT"; else echo "main moved; skipping"; fi
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.current.outputs.deploy == 'true'
+        with:
+          path: _site
+      - uses: actions/deploy-pages@v4
+        if: steps.current.outputs.deploy == 'true'
+        id: deploy
