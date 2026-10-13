@@ -1,0 +1,14 @@
+{
+    "id": "recall",
+    "name": "Recall",
+    "version": "1.0.0",
+    "description": "Spaced repetition over cards you write in notes (`front :: back`, `front ::: back` both ways, or a question, a line with ?, and its answer). Schedules each card on the forgetting curve (FSRS) and keeps your reviews in recall/log, so every device and the server's daily reminder agree.",
+    "author": "AIDE",
+    "render": "web",
+    "tabs": [{ "id": "review", "title": "Recall", "icon": "clock.arrow.circlepath" }],
+    "capabilities": ["notes:read:*", "notes:write:recall"],
+    "settings": [
+        { "key": "prefixes", "title": "Card folders", "type": "list", "help": "Notes under these folders hold cards. Default: cards" },
+        { "key": "newPerDay", "title": "New cards a day", "type": "number", "help": "Across all your devices. Default 20" }
+    ]
+}
