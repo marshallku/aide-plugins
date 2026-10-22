@@ -1,0 +1,84 @@
+/* The board: lanes side by side, scrolling sideways; only the kit's variables (aide-kit.css). */
+.kanban-lanes {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--aide-space-l);
+    overflow-x: auto;
+    padding-bottom: var(--aide-space-l);
+}
+
+.kanban-lane {
+    flex: 0 0 auto;
+    width: min(280px, 80vw);
+    display: flex;
+    flex-direction: column;
+    gap: var(--aide-space-s);
+    padding: var(--aide-space-m);
+    border-radius: var(--aide-radius-m);
+    background: var(--aide-fill);
+}
+
+.kanban-new-lane {
+    background: none;
+    border: 1px dashed var(--aide-separator);
+}
+
+.kanban-lane-title {
+    display: flex;
+    gap: var(--aide-space-s);
+}
+
+.kanban-count {
+    color: var(--aide-text-tertiary);
+}
+
+.kanban-cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--aide-space-s);
+    min-height: var(--aide-row-min-height);
+}
+
+.kanban-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--aide-space-s);
+    padding: var(--aide-space-s) var(--aide-space-m);
+    border-radius: var(--aide-radius-s);
+    background: var(--aide-card);
+    border: 1px solid var(--aide-separator);
+    touch-action: none;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.kanban-card.done .kanban-text {
+    color: var(--aide-text-secondary);
+    text-decoration: line-through;
+}
+
+.kanban-card.dragging {
+    opacity: 0.4;
+}
+
+.kanban-text {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.kanban-remove {
+    border: none;
+    background: none;
+    color: var(--aide-text-tertiary);
+    font: inherit;
+    padding: 0;
+    cursor: pointer;
+}
+
+.kanban-marker {
+    height: 2px;
+    border-radius: var(--aide-radius-pill);
+    background: var(--aide-accent);
+}

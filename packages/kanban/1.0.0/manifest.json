@@ -1,0 +1,30 @@
+{
+    "id": "kanban",
+    "name": "Kanban",
+    "version": "1.0.0",
+    "description": "Boards of cards in lanes, written in notes under boards/ the way Obsidian's Kanban plugin writes them (## lanes, - [ ] cards), so a board opens in both. Drag cards between lanes, add, tick off and remove them.",
+    "author": "AIDE",
+    "render": "web",
+    "tabs": [{ "id": "boards", "title": "Kanban", "icon": "rectangle.split.3x1" }],
+    "capabilities": ["notes:write:boards"],
+    "locales": {
+        "ko": {
+            "name": "칸반",
+            "description": "boards/ 아래 노트에 Obsidian Kanban 플러그인과 같은 형식(## 레인, - [ ] 카드)으로 쓰는 보드라서 두 앱에서 같은 보드를 열 수 있어요. 카드를 레인 사이로 끌어 옮기고, 추가하고, 완료하고, 지울 수 있어요.",
+            "tabs.boards.title": "칸반"
+        }
+    },
+    "strings": {
+        "Add a card": "카드 추가",
+        "Add a lane": "레인 추가",
+        "Boards": "보드",
+        "Boards in %@, the way Obsidian's Kanban writes them": "%@ 안의 보드 (Obsidian Kanban과 같은 형식)",
+        "Changed elsewhere; read again. (%@)": "다른 곳에서 바뀌어 다시 읽었어요. (%@)",
+        "Create": "만들기",
+        "Done": "완료",
+        "Name one to start: it gets To do, Doing and Done.": "이름을 정해 시작하세요. 할 일, 하는 중, 완료 레인이 생겨요.",
+        "New board": "새 보드",
+        "No boards yet": "아직 보드가 없어요",
+        "Remove card": "카드 지우기"
+    }
+}
