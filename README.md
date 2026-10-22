@@ -3,8 +3,11 @@
 The community index of [AIDE](https://github.com/marshallku) device plugins: small JS packages
 the AIDE app runs in a sandbox, with only the capabilities you approve on each device.
 
+- Browse them: <https://marshallku.github.io/aide-plugins/>, or in the app under **Settings › Community
+  plugins**, which also has **Restricted mode** to stop every community plugin at once.
 - Index: <https://marshallku.github.io/aide-plugins/plugins.json>. In server mode the AIDE server
-  mirrors it (Settings → `plugins.indexURL`); in local mode the app reads it directly.
+  mirrors it (Settings → `plugins.indexURL`); in local mode the app reads it directly. Each entry
+  says when its version was published (`updated`, from `published.json`).
 - Every version is reviewed. The index lists the exact bytes that were reviewed (a hash per file
   and per package), and published versions never change, even if the author's release does.
 
@@ -40,6 +43,7 @@ the index.
 | --- | --- |
 | `submissions/<id>/<version>.json` | What was approved: repo, tag, bundle hash |
 | `packages/<id>/<version>/` | The published files (written by CI only) |
+| `published.json` | The day each version was published (written by CI only) |
 | `revoked.json` | `[{"id", "hash"?, "reason"}]` |
 | `tools/check/` | `aide-plugin-check`, vendored from the AIDE app repo (don't edit here) |
 | `scripts/index.py` | check / publish / site build |
