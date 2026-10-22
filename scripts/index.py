@@ -3,13 +3,15 @@
 
     index.py check <base-sha> <submission.json>...   verify new submissions (PR CI); writes a review report
     index.py publish                      copy every verified submission into packages/ (main CI)
-    index.py site <out>                   write the Pages site: packages/ + plugins.json
+    index.py site <out>                   write the Pages site: packages/, plugins.json and a page listing them
 
 A submission is submissions/<id>/<version>.json = {"repo": "owner/name", "tag": "...", "hash": "..."}.
 The hash is the bundle hash `aide-plugin-check` prints; review approves exactly those bytes, and
-publishing refuses anything else. Published versions never change.
+publishing refuses anything else. Published versions never change. published.json keeps the day each
+version was published (`updated` in the index).
 """
 
+import html
 import json
 import os
 import re
@@ -23,6 +25,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SUBMISSIONS = ROOT / "submissions"
 PACKAGES = ROOT / "packages"
+PUBLISHED = ROOT / "published.json"
 CHECKER = os.environ.get("AIDE_PLUGIN_CHECK", str(ROOT / "tools/check/aide-plugin-check"))
 ASSETS = ["manifest.json", "main.js", "index.html", "styles.css"]
 
@@ -197,8 +200,13 @@ def cmd_check(base, paths):
     return 1 if failed else 0
 
 
+def read_published():
+    return json.loads(PUBLISHED.read_text()) if PUBLISHED.is_file() else {}
+
+
 def cmd_publish():
     all_subs = submissions()
+    dates = read_published()
     failed = False
     for sub in all_subs:
         target = published(sub)
@@ -214,10 +222,12 @@ def cmd_publish():
                 verify(sub, folder)
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copytree(folder, target)
+                dates[f"{sub['id']}/{sub['version']}"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
                 print(f"published {sub['id']} {sub['version']}")
         except Refused as error:
             failed = True
             print(f"::error::{sub['id']} {sub['version']}: {error}")
+    PUBLISHED.write_text(json.dumps(dict(sorted(dates.items())), indent=2) + "\n")
     return 1 if failed else 0
 
 
@@ -247,6 +257,7 @@ def cmd_site(out):
         current = latest.get(sub["id"])
         if current is None or semver_key(sub["version"]) > semver_key(current["version"]):
             latest[sub["id"]] = sub
+    dates = read_published()
     plugins = []
     for plugin_id in sorted(latest):
         sub = latest[plugin_id]
@@ -259,6 +270,8 @@ def cmd_site(out):
                  "capabilities": info.get("capabilities", [])}
         if info.get("author"):
             entry["author"] = info["author"]
+        if dates.get(f"{plugin_id}/{sub['version']}"):
+            entry["updated"] = dates[f"{plugin_id}/{sub['version']}"]
         plugins.append(entry)
     if out.exists():
         shutil.rmtree(out)
@@ -266,11 +279,83 @@ def cmd_site(out):
     index = {"generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
              "plugins": plugins, "revoked": revoked}
     (out / "plugins.json").write_text(json.dumps(index, indent=2, ensure_ascii=False) + "\n")
-    (out / "index.html").write_text('<!doctype html><meta charset="utf-8"><title>AIDE plugins</title>'
-                                     '<p>The AIDE community plugin index: <a href="plugins.json">plugins.json</a>. '
-                                     'Submit at <a href="https://github.com/marshallku/aide-plugins">github.com/marshallku/aide-plugins</a>.</p>\n')
+    (out / "index.html").write_text(directory(plugins))
     print(f"site: {len(plugins)} plugins, {len(revoked)} revocations")
     return 0
+
+
+# What a capability lets a plugin do, as the app's install screen says it (CapabilityText).
+CAPABILITIES = {
+    "todos:read": "Read your todos, open and done, in any note",
+    "todos:write": "Check off and add todos, in any note",
+    "storage": "Keep its own data on the device",
+    "schedule": "Run at set times while AIDE is open on a computer",
+    "attachments:read": "Read the images and documents your notes show",
+    "attachments:write": "Add images and documents to your notes",
+}
+
+
+def describe(capability):
+    if capability in CAPABILITIES:
+        return CAPABILITIES[capability]
+    kind, _, rest = capability.partition(":")
+    if kind == "net":
+        return f"Reach {rest}"
+    if kind == "notes":
+        access, _, prefix = rest.partition(":")
+        where = "all notes" if prefix == "*" else f"notes in {prefix}"
+        return f"Read {where}" if access == "read" else f"Read and change {where}"
+    return capability
+
+
+def directory(plugins):
+    """The site's front page: every plugin as the app's Browse community plugins lists it."""
+    cards = []
+    for entry in plugins:
+        capabilities = entry.get("capabilities", [])
+        asks = "".join(f"<li>{html.escape(describe(c))}</li>" for c in capabilities) or "<li>Asks for no access</li>"
+        meta = [f"v{html.escape(entry['version'])}"]
+        if entry.get("author"):
+            meta.insert(0, f"by {html.escape(entry['author'])}")
+        if entry.get("updated"):
+            meta.append(f"updated {html.escape(entry['updated'])}")
+        cards.append(
+            f'<article id="{html.escape(entry["id"])}"><h2>{html.escape(entry["name"])}</h2>'
+            f'<p class="meta">{" · ".join(meta)}</p><p>{html.escape(entry["description"])}</p>'
+            f'<details><summary>It asks to</summary><ul>{asks}</ul></details>'
+            f'<p class="links"><a href="{html.escape(entry["repo"])}">Source</a> · '
+            f'<a href="{html.escape(entry["url"])}manifest.json">Manifest</a></p></article>')
+    count = f"{len(plugins)} plugin{'s' if len(plugins) != 1 else ''}"
+    return f"""<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIDE community plugins</title>
+<style>
+:root {{ color-scheme: light dark; --line: color-mix(in srgb, currentColor 15%, transparent); }}
+body {{ font: 16px/1.5 system-ui, sans-serif; margin: 0 auto; max-width: 960px; padding: 32px 16px; }}
+header p {{ opacity: .75; }}
+main {{ display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }}
+article {{ border: 1px solid var(--line); border-radius: 12px; padding: 16px; }}
+h2 {{ font-size: 1.1rem; margin: 0; }}
+.meta {{ font-size: .85rem; margin: 2px 0 8px; opacity: .7; }}
+details {{ font-size: .9rem; }}
+ul {{ margin: 4px 0; padding-left: 20px; }}
+.links {{ font-size: .9rem; margin-bottom: 0; }}
+</style>
+<header>
+<h1>AIDE community plugins</h1>
+<p>{count}, each version reviewed and pinned by hash. Install them in AIDE from
+<b>Settings › Community plugins › Browse community plugins</b>; they run in a sandbox with only the access you approve.
+The index for apps is <a href="plugins.json">plugins.json</a>.
+<a href="https://github.com/marshallku/aide-plugins">Submit a plugin</a> ·
+<a href="https://github.com/marshallku/aide-plugins/issues/new?template=report-plugin.md">Report one</a></p>
+</header>
+<main>
+{chr(10).join(cards)}
+</main>
+</html>
+"""
 
 
 def main(argv):
