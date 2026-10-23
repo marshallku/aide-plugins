@@ -334,6 +334,438 @@
       },
       "hash": null,
       "publish": false
+    },
+    {
+      "name": "schedules: at and every with days and catch-up",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"morning\", \"at\": \"07:00\", \"days\": [\"mon\", \"tue\", \"wed\", \"thu\", \"fri\"], \"catchUp\": true}, {\"id\": \"every-15\", \"every\": \"15m\", \"days\": [\"sat\"], \"catchUp\": false}, {\"id\": \"daily-review\", \"every\": \"24h\"}, {\"id\": \"9\", \"at\": \"23:59\", \"catchUp\": false}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": "9fe2f05099e48e2d90e22dd10c1c0ffac596c358d295aac08ca11439413ed534",
+      "publish": true
+    },
+    {
+      "name": "schedules: the capability alone is allowed",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": "2ccbdcf49a9297e4f8a8605fa099b1e5b71ed4fe9fcb5bbeeb3ad89575b8fe15",
+      "publish": true
+    },
+    {
+      "name": "schedules: an empty list",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [], \"schedules\": []}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": "e0eaabcc61af3a7e2de35adca8b03e378c862c33d3f8513864d421b6d22998f0",
+      "publish": true
+    },
+    {
+      "name": "schedules: ten",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"s0\", \"every\": \"5m\"}, {\"id\": \"s1\", \"every\": \"5m\"}, {\"id\": \"s2\", \"every\": \"5m\"}, {\"id\": \"s3\", \"every\": \"5m\"}, {\"id\": \"s4\", \"every\": \"5m\"}, {\"id\": \"s5\", \"every\": \"5m\"}, {\"id\": \"s6\", \"every\": \"5m\"}, {\"id\": \"s7\", \"every\": \"5m\"}, {\"id\": \"s8\", \"every\": \"5m\"}, {\"id\": \"s9\", \"every\": \"5m\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": "1f6f0b055f84dbe6c3dd0c8598c28124b4ecaa8131441c0e2c3cbdeb5258e4a1",
+      "publish": true
+    },
+    {
+      "name": "schedules: eleven",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"s0\", \"every\": \"5m\"}, {\"id\": \"s1\", \"every\": \"5m\"}, {\"id\": \"s2\", \"every\": \"5m\"}, {\"id\": \"s3\", \"every\": \"5m\"}, {\"id\": \"s4\", \"every\": \"5m\"}, {\"id\": \"s5\", \"every\": \"5m\"}, {\"id\": \"s6\", \"every\": \"5m\"}, {\"id\": \"s7\", \"every\": \"5m\"}, {\"id\": \"s8\", \"every\": \"5m\"}, {\"id\": \"s9\", \"every\": \"5m\"}, {\"id\": \"s10\", \"every\": \"5m\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: without the schedule capability",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"storage\"], \"schedules\": [{\"id\": \"m\", \"at\": \"07:00\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: at and every together",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"at\": \"07:00\", \"every\": \"15m\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: neither at nor every",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: at 24:00",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"at\": \"24:00\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: at without a leading zero",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"at\": \"7:00\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: every under 5 minutes",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"every\": \"4m\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: every in seconds",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"every\": \"300s\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: every over a day",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"every\": \"25h\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: every 1441 minutes",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"every\": \"1441m\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: every zero",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"every\": \"0m\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: every with a leading zero",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"every\": \"05m\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: id with capitals",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"Morning\", \"at\": \"07:00\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: id over 40",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\", \"at\": \"07:00\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: empty id",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"\", \"at\": \"07:00\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: duplicate ids",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"at\": \"07:00\"}, {\"id\": \"m\", \"every\": \"1h\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: unknown day",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"at\": \"07:00\", \"days\": [\"monday\"]}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: a day twice",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"at\": \"07:00\", \"days\": [\"mon\", \"mon\"]}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: no days",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"at\": \"07:00\", \"days\": []}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: catch-up on every",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"every\": \"1h\", \"catchUp\": true}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: an empty at beside every is two of them",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"at\": \"\", \"every\": \"5m\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: catch-up not a bool",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"at\": \"07:00\", \"catchUp\": \"yes\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: days not a list",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [{\"id\": \"m\", \"at\": \"07:00\", \"days\": \"mon\"}]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: null entry",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": [null]}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "schedules: not a list",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"schedule\"], \"schedules\": {\"id\": \"m\", \"at\": \"07:00\"}}",
+        "main.js": "aide.onSchedule('m', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "commands: palette entries",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [], \"commands\": [{\"id\": \"greet\", \"title\": \"Say hello\", \"icon\": \"star\"}, {\"id\": \"plain\", \"title\": \"No icon needed\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": "2aaba4e8a657f2862bf7278015066668ed599b1c59b0f207753f8e48096fe3ba",
+      "publish": true
+    },
+    {
+      "name": "commands: ids must be unique",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [], \"commands\": [{\"id\": \"a1\", \"title\": \"A\"}, {\"id\": \"a1\", \"title\": \"B\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "commands: at most 10",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [], \"commands\": [{\"id\": \"c0\", \"title\": \"C\"}, {\"id\": \"c1\", \"title\": \"C\"}, {\"id\": \"c2\", \"title\": \"C\"}, {\"id\": \"c3\", \"title\": \"C\"}, {\"id\": \"c4\", \"title\": \"C\"}, {\"id\": \"c5\", \"title\": \"C\"}, {\"id\": \"c6\", \"title\": \"C\"}, {\"id\": \"c7\", \"title\": \"C\"}, {\"id\": \"c8\", \"title\": \"C\"}, {\"id\": \"c9\", \"title\": \"C\"}, {\"id\": \"c10\", \"title\": \"C\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "commands: id pattern",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [], \"commands\": [{\"id\": \"Bad id\", \"title\": \"A\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "commands: title 1 to 40 characters",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [], \"commands\": [{\"id\": \"long\", \"title\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "commands: about the note on screen",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"notes:read:*\"], \"commands\": [{\"id\": \"count\", \"title\": \"Count this note's words\", \"when\": \"note\"}, {\"id\": \"greet\", \"title\": \"Say hello\"}]}",
+        "main.js": "aide.onCommand('count', () => aide.surface.noteId)\n"
+      },
+      "hash": "b7ce3790051d76d44f452022492fbd92264c2a00b85edf9070ff4680b3fc52a1",
+      "publish": true
+    },
+    {
+      "name": "commands: when is note or left out",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [], \"commands\": [{\"id\": \"count\", \"title\": \"Count\", \"when\": \"always\"}]}",
+        "main.js": "aide.onCommand('count', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "panels: a right panel view (no tab needed)",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"notes:read:*\"], \"panels\": [{\"id\": \"side\", \"title\": \"Side view\", \"icon\": \"star\"}]}",
+        "main.js": "aide.on('note.active', (note) => note)\n"
+      },
+      "hash": "2027388a6533609ab5b2bbb7706ed0965e6154794719b4e6799fa682ba672c46",
+      "publish": true
+    },
+    {
+      "name": "panels: at most 3",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [], \"panels\": [{\"id\": \"p0\", \"title\": \"P\", \"icon\": \"star\"}, {\"id\": \"p1\", \"title\": \"P\", \"icon\": \"star\"}, {\"id\": \"p2\", \"title\": \"P\", \"icon\": \"star\"}, {\"id\": \"p3\", \"title\": \"P\", \"icon\": \"star\"}]}",
+        "main.js": "\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "panels: ids must be unique",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [], \"panels\": [{\"id\": \"a\", \"title\": \"A\", \"icon\": \"star\"}, {\"id\": \"a\", \"title\": \"B\", \"icon\": \"star\"}]}",
+        "main.js": "\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "embeds: an editor of drawings",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"notes:write:*\", \"attachments:write\"], \"sheets\": [{\"id\": \"draw\", \"title\": \"Drawing\", \"icon\": \"scribble\"}], \"embeds\": [{\"suffix\": \".excalidraw.svg\", \"sheet\": \"draw\"}, {\"suffix\": \".svg\", \"sheet\": \"draw\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": "6862f076317952ef468e452ad170200e620c2e1f18fae2f4989d6cf8f0eae701",
+      "publish": true
+    },
+    {
+      "name": "embeds: attachments can be read only",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"attachments:read\"]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": "3b7fa3069f28bd73080c6517ef0ff452749b316bab2c42af61deab46ca2c0d30",
+      "publish": true
+    },
+    {
+      "name": "embeds: the sheet is the plugin's",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"attachments:write\"], \"sheets\": [{\"id\": \"draw\", \"title\": \"Drawing\", \"icon\": \"scribble\"}], \"embeds\": [{\"suffix\": \".excalidraw.svg\", \"sheet\": \"other\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "embeds: the suffix ends with an attachment's extension",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"attachments:write\"], \"sheets\": [{\"id\": \"draw\", \"title\": \"Drawing\", \"icon\": \"scribble\"}], \"embeds\": [{\"suffix\": \".excalidraw.json\", \"sheet\": \"draw\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "embeds: the suffix is the end of a name, after a dot",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"attachments:write\"], \"sheets\": [{\"id\": \"draw\", \"title\": \"Drawing\", \"icon\": \"scribble\"}], \"embeds\": [{\"suffix\": \".xsvg\", \"sheet\": \"draw\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "embeds: the suffix starts with a dot",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"attachments:write\"], \"sheets\": [{\"id\": \"draw\", \"title\": \"Drawing\", \"icon\": \"scribble\"}], \"embeds\": [{\"suffix\": \"excalidraw.svg\", \"sheet\": \"draw\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "embeds: the suffix is lower case",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"attachments:write\"], \"sheets\": [{\"id\": \"draw\", \"title\": \"Drawing\", \"icon\": \"scribble\"}], \"embeds\": [{\"suffix\": \".Excalidraw.svg\", \"sheet\": \"draw\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "embeds: suffixes are unique",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"attachments:write\"], \"sheets\": [{\"id\": \"draw\", \"title\": \"Drawing\", \"icon\": \"scribble\"}], \"embeds\": [{\"suffix\": \".a.svg\", \"sheet\": \"draw\"}, {\"suffix\": \".a.svg\", \"sheet\": \"draw\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "embeds: at most 4",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"attachments:write\"], \"sheets\": [{\"id\": \"draw\", \"title\": \"Drawing\", \"icon\": \"scribble\"}], \"embeds\": [{\"suffix\": \".a.svg\", \"sheet\": \"draw\"}, {\"suffix\": \".b.svg\", \"sheet\": \"draw\"}, {\"suffix\": \".c.svg\", \"sheet\": \"draw\"}, {\"suffix\": \".d.svg\", \"sheet\": \"draw\"}, {\"suffix\": \".e.svg\", \"sheet\": \"draw\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
     }
   ]
 }

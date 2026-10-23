@@ -34,6 +34,9 @@ const (
 	maxPathBytes      = 200
 	maxPathSegments   = 8
 	maxPublishVersion = 32
+	maxSchedules      = 10
+	minEveryMinutes   = 5
+	maxEveryMinutes   = 24 * 60
 )
 
 var (
@@ -46,6 +49,11 @@ var (
 	// Public submissions only: the version becomes a folder name in the index.
 	publishVersionPattern = regexp.MustCompile(`^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$`)
 	settingTypes          = []string{"string", "text", "number", "bool", "enum", "time", "list"}
+	scheduleIDPattern     = regexp.MustCompile(`^[a-z0-9-]{1,40}$`)
+	atPattern             = regexp.MustCompile(`^([01][0-9]|2[0-3]):[0-5][0-9]$`)
+	everyPattern          = regexp.MustCompile(`^([1-9][0-9]{0,3})([mh])$`)
+	// Days is the week from Monday, as schedules name its days.
+	Days = []string{"mon", "tue", "wed", "thu", "fri", "sat", "sun"}
 )
 
 // Tab is a tab or a sheet (same shape).
@@ -67,6 +75,20 @@ type SettingsPage struct {
 	Title string `json:"title"`
 }
 
+// Schedule runs the plugin's `aide.onSchedule(id, …)` handler at a time of day (`At`, HH:MM in
+// the owner's timezone) or every so often (`Every`, "15m" or "2h"), on `Days` (all when empty),
+// while the desktop app is open. The app, not the server, runs it.
+type Schedule struct {
+	ID      string   `json:"id"`
+	At      string   `json:"at,omitempty"`
+	Every   string   `json:"every,omitempty"`
+	Days    []string `json:"days,omitempty"`
+	CatchUp bool     `json:"catchUp,omitempty"`
+	// hasDays tells an empty list from none (an empty list is refused); hasAt and hasEvery an empty
+	// string from none (the apps refuse `"at": ""` beside `every` as two of them).
+	hasDays, hasAt, hasEvery bool
+}
+
 type Manifest struct {
 	ID           string         `json:"id"`
 	Name         string         `json:"name"`
@@ -78,8 +100,43 @@ type Manifest struct {
 	Capabilities []string       `json:"capabilities"`
 	Settings     []SettingField `json:"settings,omitempty"`
 	Sheets       []Tab          `json:"sheets,omitempty"`
-	SettingsPage *SettingsPage  `json:"settingsPage,omitempty"`
+	// Panels: views of the desktop's right panel (aide.surface.kind "panel"); none on a phone.
+	Panels       []Tab         `json:"panels,omitempty"`
+	SettingsPage *SettingsPage `json:"settingsPage,omitempty"`
+	Schedules    []Schedule    `json:"schedules,omitempty"`
+	Commands     []Command     `json:"commands,omitempty"`
+	Embeds       []Embed       `json:"embeds,omitempty"`
+	// Locales translate what the app shows from the manifest (validateLocales); Strings is the
+	// plugin's own catalog for aide.t, in i18n/strings.json's format (validateStrings).
+	Locales map[string]map[string]any `json:"locales,omitempty"`
+	Strings map[string]any            `json:"strings,omitempty"`
 }
+
+// Embed makes the plugin the editor of the attachments whose path ends with Suffix: the note shows
+// an Edit button on them that opens Sheet (community/README.md › Embeds).
+type Embed struct {
+	Suffix string `json:"suffix"`
+	Sheet  string `json:"sheet"`
+}
+
+const maxEmbeds = 4
+
+// embedSuffix: lower case, a dot first, ending with an attachment's extension (spec/embeds.md).
+var embedSuffix = regexp.MustCompile(`^\.([a-z0-9-][a-z0-9.-]*\.)?(svg|png|jpg|jpeg|gif|webp|html|htm)$`)
+
+// Command is an entry of the app's command palette: running it calls the page's
+// aide.onCommand(id) handler out of sight. The person runs it, so it needs no capability.
+type Command struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
+	Icon  string `json:"icon,omitempty"`
+	// When is "note" for a command about the note on screen: offered only while one is, and run
+	// with its id in aide.surface.noteId. Empty: always offered.
+	When string `json:"when,omitempty"`
+}
+
+// maxCommands is how many palette entries one plugin may add.
+const maxCommands = 10
 
 // Package is a validated package.
 type Package struct {
@@ -166,6 +223,9 @@ func decodeManifestFields(raw []byte) (Manifest, error) {
 	if m.Tabs, err = tabs(top, "tabs", true); err != nil {
 		return m, err
 	}
+	if m.Panels, err = tabs(top, "panels", false); err != nil {
+		return m, err
+	}
 	if m.Sheets, err = tabs(top, "sheets", false); err != nil {
 		return m, err
 	}
@@ -203,7 +263,101 @@ func decodeManifestFields(raw []byte) (Manifest, error) {
 		}
 		m.SettingsPage = &SettingsPage{Title: title}
 	}
+	if m.Schedules, err = schedules(top); err != nil {
+		return m, err
+	}
+	if m.Commands, err = commands(top); err != nil {
+		return m, err
+	}
+	embeds, err := objects(top, "embeds", false)
+	if err != nil {
+		return m, err
+	}
+	for _, item := range embeds {
+		var e Embed
+		if e.Suffix, err = str(item, "suffix", true); err != nil {
+			return m, fmt.Errorf("embeds: %w", err)
+		}
+		if e.Sheet, err = str(item, "sheet", true); err != nil {
+			return m, fmt.Errorf("embeds: %w", err)
+		}
+		m.Embeds = append(m.Embeds, e)
+	}
+	// Translations: decoded here so validateLocales and validateStrings see what the package says.
+	if value, ok := present(top, "locales"); ok {
+		if err := json.Unmarshal(value, &m.Locales); err != nil || m.Locales == nil {
+			return m, fmt.Errorf("locales must be an object of languages, each an object")
+		}
+		for language, entries := range m.Locales {
+			if entries == nil {
+				return m, fmt.Errorf("locales: %s must be an object", language)
+			}
+		}
+	}
+	if value, ok := present(top, "strings"); ok {
+		if err := json.Unmarshal(value, &m.Strings); err != nil || m.Strings == nil {
+			return m, fmt.Errorf("strings must be an object")
+		}
+	}
 	return m, nil
+}
+
+func commands(top map[string]json.RawMessage) ([]Command, error) {
+	items, err := objects(top, "commands", false)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]Command, 0, len(items))
+	for _, item := range items {
+		var c Command
+		if c.ID, err = str(item, "id", true); err != nil {
+			return nil, fmt.Errorf("commands: %w", err)
+		}
+		if c.Title, err = str(item, "title", true); err != nil {
+			return nil, fmt.Errorf("commands: %w", err)
+		}
+		if c.Icon, err = str(item, "icon", false); err != nil {
+			return nil, fmt.Errorf("commands: %w", err)
+		}
+		if c.When, err = str(item, "when", false); err != nil {
+			return nil, fmt.Errorf("commands: %w", err)
+		}
+		out = append(out, c)
+	}
+	return out, nil
+}
+
+func schedules(top map[string]json.RawMessage) ([]Schedule, error) {
+	items, err := objects(top, "schedules", false)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]Schedule, 0, len(items))
+	for _, item := range items {
+		var s Schedule
+		if s.ID, err = str(item, "id", true); err != nil {
+			return nil, fmt.Errorf("schedules: %w", err)
+		}
+		if s.At, err = str(item, "at", false); err != nil {
+			return nil, fmt.Errorf("schedules: %w", err)
+		}
+		if s.Every, err = str(item, "every", false); err != nil {
+			return nil, fmt.Errorf("schedules: %w", err)
+		}
+		_, s.hasAt = present(item, "at")
+		_, s.hasEvery = present(item, "every")
+		_, s.hasDays = present(item, "days")
+		if s.Days, err = strs(item, "days", false); err != nil {
+			return nil, fmt.Errorf("schedules: %w", err)
+		}
+		if value, ok := present(item, "catchUp"); ok {
+			if err := json.Unmarshal(value, &s.CatchUp); err != nil || (value[0] != 't' && value[0] != 'f') {
+				return nil, errors.New("schedules: catchUp must be true or false")
+			}
+		}
+		out = append(out, s)
+	}
+	return out, nil
 }
 
 // object reads one JSON object with exact, unique keys.
@@ -339,7 +493,7 @@ func validateManifest(m Manifest) error {
 	for _, group := range []struct {
 		kind    string
 		entries []Tab
-	}{{"tab", m.Tabs}, {"sheet", m.Sheets}} {
+	}{{"tab", m.Tabs}, {"sheet", m.Sheets}, {"panel", m.Panels}} {
 		if len(group.entries) > maxTabs {
 			return invalid("at most %d %ss", maxTabs, group.kind)
 		}
@@ -360,6 +514,41 @@ func validateManifest(m Manifest) error {
 	if err := validateSettings(m.Settings); err != nil {
 		return err
 	}
+	if err := validateSchedules(m.Schedules, m.Capabilities); err != nil {
+		return err
+	}
+	if len(m.Commands) > maxCommands {
+		return invalid("at most %d commands", maxCommands)
+	}
+	seenCommands := map[string]bool{}
+	for _, command := range m.Commands {
+		if seenCommands[command.ID] {
+			return invalid("command ids must be unique")
+		}
+		seenCommands[command.ID] = true
+		if !idPattern.MatchString(command.ID) || command.Title == "" || utf8.RuneCountInString(command.Title) > 40 {
+			return invalid("command %s", command.ID)
+		}
+		if command.When != "" && command.When != "note" {
+			return invalid("command %s: when is \"note\" or left out", command.ID)
+		}
+	}
+	if len(m.Embeds) > maxEmbeds {
+		return invalid("at most %d embeds", maxEmbeds)
+	}
+	seenSuffixes := map[string]bool{}
+	for _, embed := range m.Embeds {
+		if seenSuffixes[embed.Suffix] {
+			return invalid("embed suffixes must be unique")
+		}
+		seenSuffixes[embed.Suffix] = true
+		if len(embed.Suffix) < 2 || len(embed.Suffix) > 40 || !embedSuffix.MatchString(embed.Suffix) {
+			return invalid("embed suffix %s", embed.Suffix)
+		}
+		if !slices.ContainsFunc(m.Sheets, func(sheet Tab) bool { return sheet.ID == embed.Sheet }) {
+			return invalid("embed %s: no sheet %s", embed.Suffix, embed.Sheet)
+		}
+	}
 	if len(m.Capabilities) > maxCapabilities {
 		return invalid("too many capabilities")
 	}
@@ -368,7 +557,10 @@ func validateManifest(m Manifest) error {
 			return invalid("unknown capability %s", capability)
 		}
 	}
-	return nil
+	if err := validateLocales(m); err != nil {
+		return err
+	}
+	return validateStrings(m.Strings)
 }
 
 func validateSettings(fields []SettingField) error {
@@ -394,6 +586,72 @@ func validateSettings(fields []SettingField) error {
 	return nil
 }
 
+func validateSchedules(schedules []Schedule, capabilities []string) error {
+	if len(schedules) == 0 {
+		return nil
+	}
+	if len(schedules) > maxSchedules {
+		return invalid("at most %d schedules", maxSchedules)
+	}
+	if !slices.Contains(capabilities, "schedule") {
+		return invalid("schedules need the schedule capability")
+	}
+	seen := map[string]bool{}
+	for _, s := range schedules {
+		switch {
+		case !scheduleIDPattern.MatchString(s.ID):
+			return invalid("schedule id %s", s.ID)
+		case seen[s.ID]:
+			return invalid("schedule %s twice", s.ID)
+		case s.hasAt == s.hasEvery:
+			return invalid("schedule %s needs exactly one of at and every", s.ID)
+		case s.hasAt && !atPattern.MatchString(s.At):
+			return invalid("schedule %s: at must be HH:MM (24 hours)", s.ID)
+		case s.hasEvery && !validEvery(s.Every):
+			return invalid("schedule %s: every must be 5m to 24h", s.ID)
+		case s.hasEvery && s.CatchUp:
+			return invalid("schedule %s: catchUp is for at schedules", s.ID)
+		case s.hasDays && !validDays(s.Days):
+			return invalid("schedule %s: days must name distinct days (mon…sun)", s.ID)
+		}
+		seen[s.ID] = true
+	}
+	return nil
+}
+
+// EveryMinutes is the interval of an `every` value ("15m", "2h"); 0 when it isn't one.
+func EveryMinutes(every string) int {
+	match := everyPattern.FindStringSubmatch(every)
+	if match == nil {
+		return 0
+	}
+	amount := 0
+	fmt.Sscan(match[1], &amount)
+	if match[2] == "h" {
+		amount *= 60
+	}
+	return amount
+}
+
+func validEvery(every string) bool {
+	minutes := EveryMinutes(every)
+	return minutes >= minEveryMinutes && minutes <= maxEveryMinutes
+}
+
+func validDays(days []string) bool {
+	if len(days) == 0 {
+		return false
+	}
+	seen := map[string]bool{}
+	for _, day := range days {
+		if !slices.Contains(Days, day) || seen[day] {
+			return false
+		}
+		seen[day] = true
+	}
+	return true
+}
+
 // ValidID reports whether id is a valid plugin (or tab) id.
 func ValidID(id string) bool {
 	return idPattern.MatchString(id)
@@ -402,7 +660,7 @@ func ValidID(id string) bool {
 // ValidCapability reports whether the app knows a capability.
 func ValidCapability(capability string) bool {
 	switch capability {
-	case "todos:read", "todos:write", "storage":
+	case "todos:read", "todos:write", "storage", "schedule", "attachments:read", "attachments:write":
 		return true
 	}
 	if host, ok := strings.CutPrefix(capability, "net:"); ok {

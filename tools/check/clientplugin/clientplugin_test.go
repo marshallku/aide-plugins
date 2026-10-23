@@ -87,3 +87,27 @@ func TestAKeyGivenTwiceIsRefused(t *testing.T) {
 		}
 	}
 }
+
+// The index's strict check reads a package's translations too: a broken one is refused.
+func TestValidatePublishChecksTranslations(t *testing.T) {
+	manifest := func(extra string) map[string][]byte {
+		return map[string][]byte{
+			"manifest.json": []byte(`{"id":"hello","name":"Hello","version":"1.0.0","description":"","render":"web","tabs":[],"capabilities":[]` + extra + `}`),
+			"main.js":       []byte("1"),
+		}
+	}
+	if _, err := ValidatePublish(manifest(`,"locales":{"ko":{"name":"안녕"}},"strings":{"Hi":"안녕"}`)); err != nil {
+		t.Fatalf("good translations refused: %v", err)
+	}
+	for name, extra := range map[string]string{
+		"locales not an object":     `,"locales":123`,
+		"a language not an object":  `,"locales":{"ko":"안녕"}`,
+		"an unknown locale path":    `,"locales":{"ko":{"nickname":"x"}}`,
+		"strings not an object":     `,"strings":["x"]`,
+		"a translation's arguments": `,"strings":{"%@ items":"%lld개"}`,
+	} {
+		if _, err := ValidatePublish(manifest(extra)); err == nil {
+			t.Errorf("%s: accepted", name)
+		}
+	}
+}
