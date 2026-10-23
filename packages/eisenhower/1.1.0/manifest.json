@@ -1,0 +1,29 @@
+{
+    "id": "eisenhower",
+    "name": "Eisenhower matrix",
+    "version": "1.1.0",
+    "description": "Open todos sorted into do / schedule / delegate / drop by priority and due date.",
+    "author": "AIDE",
+    "render": "web",
+    "tabs": [{ "id": "matrix", "title": "Matrix", "icon": "square.grid.2x2" }],
+    "capabilities": ["todos:read", "todos:write"],
+    "locales": {
+        "ko": {
+            "name": "아이젠하워 매트릭스",
+            "description": "열린 할 일을 우선순위와 마감일에 따라 지금 하기 / 일정 잡기 / 위임하기 / 나중에로 나눠요.",
+            "tabs.matrix.title": "매트릭스"
+        }
+    },
+    "strings": {
+        "%lld open": "열린 할 일 %lld개",
+        "Complete %@": "%@ 완료",
+        "Delegate": "위임하기",
+        "Do": "지금 하기",
+        "Important": "중요",
+        "Later": "나중에",
+        "Neither": "둘 다 아님",
+        "Schedule": "일정 잡기",
+        "Urgent": "긴급",
+        "Urgent · important": "긴급 · 중요"
+    }
+}

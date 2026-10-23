@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main id="count" hidden>
+    <p id="title" class="hint"></p>
+    <p id="words" class="big"></p>
+    <p id="detail" class="hint"></p>
+</main>
+<main id="options" hidden>
+    <label><input type="checkbox" id="skipHeadings"> <span data-t>Skip headings</span></label>
+    <p class="hint" data-t>Headings (lines starting with #) aren't counted.</p>
+</main>
+<p id="status" role="status"></p>
+<button id="close" type="button" data-t>Close</button>
+<script src="main.js"></script>
+</body>
+</html>

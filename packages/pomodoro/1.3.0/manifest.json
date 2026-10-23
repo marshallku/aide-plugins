@@ -1,0 +1,35 @@
+{
+    "id": "pomodoro",
+    "name": "Pomodoro",
+    "version": "1.3.0",
+    "description": "Focus timer drawn with native controls (25/5 by default); counts finished sessions per day, and at 21:00 adds the day's count to the note pomodoro/log.",
+    "author": "AIDE",
+    "render": "native",
+    "tabs": [{ "id": "timer", "title": "Focus", "icon": "timer" }],
+    "capabilities": ["storage", "notes:write:pomodoro", "schedule"],
+    "settings": [
+        { "key": "focusMinutes", "title": "Focus minutes", "type": "number", "help": "Default 25" },
+        { "key": "breakMinutes", "title": "Break minutes", "type": "number", "help": "Default 5" }
+    ],
+    "schedules": [{ "id": "evening-log", "at": "21:00", "catchUp": true }],
+    "locales": {
+        "ko": {
+            "name": "뽀모도로",
+            "description": "앱 기본 컨트롤로 그린 집중 타이머예요(기본 25분 집중, 5분 휴식). 하루에 끝낸 세션을 세고, 21:00에 그날의 횟수를 pomodoro/log 노트에 더해요.",
+            "tabs.timer.title": "집중",
+            "settings.focusMinutes.title": "집중 시간(분)",
+            "settings.focusMinutes.help": "기본값 25",
+            "settings.breakMinutes.title": "휴식 시간(분)",
+            "settings.breakMinutes.help": "기본값 5"
+        }
+    },
+    "strings": {
+        "Break": "휴식",
+        "Focus": "집중",
+        "Pause": "일시정지",
+        "Reset": "초기화",
+        "Sessions today: %lld": "오늘 세션: %lld",
+        "Skip": "건너뛰기",
+        "Start": "시작"
+    }
+}

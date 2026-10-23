@@ -1,0 +1,29 @@
+{
+    "id": "excalidraw",
+    "name": "Excalidraw",
+    "version": "1.1.0",
+    "description": "Draw in your notes. New drawing from a note's plugin menu; Edit on a drawing opens it again. A drawing is an SVG that keeps its scene (drawings/*.excalidraw.svg), so every note reader shows it, with this plugin or without.",
+    "author": "AIDE",
+    "render": "web",
+    "tabs": [],
+    "sheets": [{ "id": "draw", "title": "Drawing", "icon": "scribble" }],
+    "embeds": [{ "suffix": ".excalidraw.svg", "sheet": "draw" }],
+    "capabilities": ["notes:write:*", "attachments:write"],
+    "locales": {
+        "ko": {
+            "description": "노트에 그림을 그려요. 노트의 플러그인 메뉴에서 새 그림을 만들고, 그림의 편집 버튼으로 다시 열어요. 그림은 장면을 담은 SVG(drawings/*.excalidraw.svg)라서 이 플러그인이 없어도 어떤 노트 리더에서나 보여요.",
+            "sheets.draw.title": "그림"
+        }
+    },
+    "strings": {
+        "%@ isn't there": "%@ 파일이 없어요",
+        "Couldn't open it: %@": "열지 못했어요: %@",
+        "Draw something first.": "먼저 무언가를 그려 주세요.",
+        "New drawing": "새 그림",
+        "Not saved: %@": "저장하지 못했어요: %@",
+        "Save": "저장",
+        "Saved.": "저장했어요.",
+        "Saving…": "저장 중…",
+        "the note no longer shows this drawing": "노트에 이 그림이 더 이상 없어요"
+    }
+}

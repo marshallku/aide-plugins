@@ -1,0 +1,13 @@
+:root { color-scheme: light dark; font: -apple-system-body; }
+body { margin: 0; padding: 12px; font-family: -apple-system, system-ui; }
+#grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+section { border-radius: 12px; padding: 10px; background: rgba(127, 127, 127, 0.12); min-height: 120px; }
+section[data-q="do"] { background: rgba(255, 59, 48, 0.14); }
+section[data-q="schedule"] { background: rgba(0, 122, 255, 0.14); }
+h2 { font-size: 15px; margin: 0; }
+.hint { font-size: 11px; opacity: 0.6; margin: 2px 0 8px; }
+ul { list-style: none; margin: 0; padding: 0; }
+li { display: flex; gap: 6px; align-items: flex-start; font-size: 13px; padding: 4px 0; }
+li button { flex: none; width: 20px; height: 20px; border-radius: 50%; border: 1px solid currentColor; background: none; padding: 0; }
+.due { font-size: 11px; opacity: 0.7; }
+#status { font-size: 12px; opacity: 0.7; }

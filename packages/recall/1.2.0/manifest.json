@@ -1,0 +1,105 @@
+{
+    "id": "recall",
+    "name": "Recall",
+    "version": "1.2.0",
+    "description": "Spaced repetition over cards you write in notes (`front :: back`, `front ::: back` both ways, or a question, a line with ?, and its answer), and over cards the server plugin makes every night from what you newly wrote, which wait in an inbox until you accept them. Schedules each card on the forgetting curve (FSRS) and keeps your reviews in recall/log, so every device and the server's daily reminder agree.",
+    "author": "AIDE",
+    "render": "web",
+    "tabs": [
+        {
+            "id": "review",
+            "title": "Recall",
+            "icon": "clock.arrow.circlepath"
+        }
+    ],
+    "capabilities": [
+        "notes:read:*",
+        "notes:write:recall"
+    ],
+    "settings": [
+        {
+            "key": "prefixes",
+            "title": "Card folders",
+            "type": "list",
+            "help": "Notes under these folders hold cards. Default: cards"
+        },
+        {
+            "key": "newPerDay",
+            "title": "New cards a day",
+            "type": "number",
+            "help": "Across all your devices. Default 20"
+        }
+    ],
+    "locales": {
+        "ko": {
+            "name": "복습",
+            "description": "노트에 쓴 카드(`front :: back`, 양방향은 `front ::: back`, 또는 질문, ?만 있는 줄, 그리고 답)와, 서버 플러그인이 매일 밤 새로 쓴 내용으로 만들어 수락할 때까지 받은 카드함에 두는 카드로 간격 반복 복습을 해요. 망각 곡선(FSRS)에 따라 카드마다 일정을 잡고 복습 기록을 recall/log에 남겨서, 모든 기기와 서버의 매일 알림이 같은 상태를 봐요.",
+            "tabs.review.title": "복습",
+            "settings.prefixes.title": "카드 폴더",
+            "settings.prefixes.help": "이 폴더 아래 노트에 카드가 있어요. 기본값: cards",
+            "settings.newPerDay.title": "하루 새 카드 수",
+            "settings.newPerDay.help": "모든 기기를 합친 수예요. 기본값 20"
+        }
+    },
+    "strings": {
+        "%1$@ in %2$@": "%2$@의 %1$@",
+        "%1$lld due · %2$lld new left today": "복습 %1$lld개 · 오늘 남은 새 카드 %2$lld개",
+        "%@d": "%@일",
+        "%@h": "%@시간",
+        "%@m": "%@분",
+        "%@mo": "%@개월",
+        "%@y": "%@년",
+        "%lld cards": {
+            "en": {
+                "one": "%lld card",
+                "other": "%lld cards"
+            },
+            "ko": "카드 %lld개"
+        },
+        "%lld review lines couldn't be read and were left out.": {
+            "en": {
+                "one": "%lld review line couldn't be read and was left out.",
+                "other": "%lld review lines couldn't be read and were left out."
+            },
+            "ko": "읽을 수 없는 복습 기록 %lld줄은 제외했어요."
+        },
+        "Accept": "수락",
+        "Accept all": "모두 수락",
+        "Again": "다시",
+        "All caught up": "모두 끝냈어요",
+        "All done": "다 했어요",
+        "Back": "돌아가기",
+        "Couldn't load the next card:": "다음 카드를 불러오지 못했어요:",
+        "Couldn't read the cards: %@": "카드를 읽지 못했어요: %@",
+        "Couldn't save the grade:": "평가를 저장하지 못했어요:",
+        "Couldn't save: %@": "저장하지 못했어요: %@",
+        "Discard": "버리기",
+        "Due now": "지금 복습",
+        "Easy": "쉬움",
+        "Good": "좋음",
+        "Hard": "어려움",
+        "Made from your notes · %lld cards to check": {
+            "en": {
+                "one": "Made from your notes · %lld card to check",
+                "other": "Made from your notes · %lld cards to check"
+            },
+            "ko": "노트에서 만든 카드 · 확인할 카드 %lld개"
+        },
+        "New today": "오늘 새 카드",
+        "No cards yet": "아직 카드가 없어요",
+        "Not yet seen": "아직 안 본 카드",
+        "Nothing is due. Come back when the reminder says so.": "지금 복습할 카드가 없어요. 알림이 오면 다시 와 주세요.",
+        "Only the first %1$lld notes under %2$@ are read.": "%2$@ 아래 노트는 처음 %1$lld개만 읽어요.",
+        "Only the first %lld review logs are read; older reviews may be missing.": "복습 기록은 처음 %lld개만 읽어요. 오래된 복습이 빠졌을 수 있어요.",
+        "Reading your cards…": "카드를 읽는 중…",
+        "Saving…": "저장 중…",
+        "Show answer": "정답 보기",
+        "Start review": "복습 시작",
+        "That's everything due for now.": "지금 복습할 카드를 모두 끝냈어요.",
+        "Try again": "다시 시도",
+        "Write a line like \"photosynthesis :: how plants make food from light\" in a note under %@/, or a question, a line with ?, and its answer.": "%@/ 아래 노트에 \"광합성 :: 식물이 빛으로 양분을 만드는 과정\" 같은 줄을 쓰거나, 질문과 ?만 있는 줄, 그리고 답을 써 보세요.",
+        "already decided on another device": "다른 기기에서 이미 처리했어요",
+        "couldn't tell whether the grade was saved; try again": "평가가 저장됐는지 확인하지 못했어요. 다시 시도해 주세요",
+        "the review log is full this month": "이번 달 복습 기록이 가득 찼어요"
+    }
+}
