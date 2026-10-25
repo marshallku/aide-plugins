@@ -8,6 +8,9 @@ A submission is reviewed from the CI report (the release's actual files), not th
   (`notes:read:<folder>`) beat `*`. Every `net:<host>` needs a reason in the PR description.
 - **No surprises.** The plugin does what its description says, sends nothing elsewhere, and
   doesn't try to reach anything outside the `aide.*` API.
+- **Suitable for everyone.** AIDE is rated 4+ on the App Store, so the index lists nothing meant for an
+  older audience: no mature, violent or sexual content, gambling or the like, in the plugin or what it
+  shows. Plugins that would need an age gate aren't listed.
 - **One id per repo.** Ids are first come, first served, and can't move to another repo.
 - **Versions are immutable.** Fix a bad release with a new version.
 
