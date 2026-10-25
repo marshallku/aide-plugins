@@ -10,6 +10,9 @@ the AIDE app runs in a sandbox, with only the capabilities you approve on each d
   says when its version was published (`updated`, from `published.json`).
 - Every version is reviewed. The index lists the exact bytes that were reviewed (a hash per file
   and per package), and published versions never change, even if the author's release does.
+- Each plugin has a page on the AIDE website, `https://aide.marshallku.dev/plugins/<id>/`. On an iPhone
+  with AIDE, a link to it opens the plugin in the app. AIDE from the App Store installs and runs only
+  the plugins this index lists.
 
 ## Submitting a plugin (or a new version)
 
@@ -33,9 +36,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for what review looks for.
 
 ## Reporting a plugin
 
-Open an issue with the "Report a plugin" template. A plugin found to be harmful is added to
+Open an issue with the "Report a plugin" template (the app's **Report a problem** and the website's
+plugin pages open it). Reports get an answer within 7 days. A plugin found to be harmful is added to
 `revoked.json` (one version by hash, or every version), and apps turn it off when they next read
-the index.
+the index; AIDE from the App Store can't turn it back on.
 
 ## Layout
 

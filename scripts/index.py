@@ -323,8 +323,12 @@ def directory(plugins):
             f'<article id="{html.escape(entry["id"])}"><h2>{html.escape(entry["name"])}</h2>'
             f'<p class="meta">{" · ".join(meta)}</p><p>{html.escape(entry["description"])}</p>'
             f'<details><summary>It asks to</summary><ul>{asks}</ul></details>'
-            f'<p class="links"><a href="{html.escape(entry["repo"])}">Source</a> · '
-            f'<a href="{html.escape(entry["url"])}manifest.json">Manifest</a></p></article>')
+            # The plugin's page on the AIDE website: on an iPhone with AIDE it opens the plugin in the
+            # app (a universal link, which must come from another domain than its own).
+            f'<p class="links"><a href="https://aide.marshallku.dev/plugins/{html.escape(entry["id"])}/">Open in AIDE</a> · '
+            f'<a href="{html.escape(entry["repo"])}">Source</a> · '
+            f'<a href="{html.escape(entry["url"])}manifest.json">Manifest</a> · '
+            f'<a href="https://github.com/marshallku/aide-plugins/issues/new?template=report-plugin.md&amp;title=Report:%20{html.escape(entry["id"])}">Report</a></p></article>')
     count = f"{len(plugins)} plugin{'s' if len(plugins) != 1 else ''}"
     return f"""<!doctype html>
 <html lang="en">
