@@ -1,0 +1,25 @@
+/* Agent sessions: the plugin kit's parts; only kit variables (design/README.md). */
+.aide-kit > * + * {
+    margin-top: var(--aide-space-m);
+}
+
+.aide-kit textarea.aide-input {
+    width: 100%;
+    resize: vertical;
+    font: inherit;
+}
+
+.aide-kit textarea.markdown {
+    font-family: var(--aide-mono);
+    font-size: var(--aide-rowMeta-size);
+}
+
+.aide-kit .aide-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--aide-space-xs);
+}
+
+.aide-kit {
+    overflow-wrap: anywhere;
+}

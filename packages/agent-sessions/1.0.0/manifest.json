@@ -1,0 +1,88 @@
+{
+    "id": "agent-sessions",
+    "name": "Agent sessions",
+    "version": "1.0.0",
+    "description": "Lists this computer's Claude Code, Codex and Grok sessions, newest first, and makes a note of one the way you ask: from the right panel, or /session in Quick Capture and Scratch.",
+    "author": "AIDE",
+    "render": "web",
+    "tabs": [],
+    "panels": [
+        {
+            "id": "sessions",
+            "title": "Agent sessions",
+            "icon": "assistant"
+        }
+    ],
+    "commands": [
+        {
+            "id": "import",
+            "title": "Import from an agent session",
+            "icon": "assistant",
+            "slash": "session"
+        }
+    ],
+    "settings": [
+        {
+            "key": "folder",
+            "title": "Folder for new notes",
+            "type": "text",
+            "default": "topics"
+        },
+        {
+            "key": "instruction",
+            "title": "What to make of a session",
+            "type": "text",
+            "default": "Write a note of what I learned in this session: the ideas, the decisions and why, the pitfalls, with code where it matters."
+        }
+    ],
+    "capabilities": [
+        "sessions:read",
+        "ai:run",
+        "notes:write:*",
+        "storage"
+    ],
+    "locales": {
+        "ko": {
+            "name": "에이전트 세션",
+            "description": "이 컴퓨터의 Claude Code, Codex, Grok 세션을 최신순으로 보여 주고, 고른 세션을 원하는 대로 노트로 만들어요. 오른쪽 패널에서, 또는 빠른 메모와 Scratch에서 /session으로.",
+            "panels.sessions.title": "에이전트 세션",
+            "commands.import.title": "에이전트 세션에서 가져오기",
+            "settings.folder.title": "새 노트 폴더",
+            "settings.instruction.title": "세션으로 만들 것"
+        }
+    },
+    "strings": {
+        "%lld d ago": "%lld일 전",
+        "%lld h ago": "%lld시간 전",
+        "%lld min ago": "%lld분 전",
+        "%lld turns in the middle were left out (the session is long).": "세션이 길어서 중간의 %lld개 대화는 빼고 읽었어요.",
+        "A note is already at %@. Change the title.": "%@에 이미 노트가 있어요. 제목을 바꿔 주세요.",
+        "Agent sessions are read on a Mac or Linux computer.": "에이전트 세션은 Mac이나 Linux 컴퓨터에서 읽어요.",
+        "All agents": "모든 에이전트",
+        "All sessions": "모든 세션",
+        "Ask again": "다시 요청",
+        "Claude Code, Codex and Grok sessions on this computer show up here.": "이 컴퓨터의 Claude Code, Codex, Grok 세션이 여기에 나와요.",
+        "Discard": "버리기",
+        "Folder": "폴더",
+        "Keep": "유지",
+        "Keep the unsaved note?": "저장하지 않은 노트를 유지할까요?",
+        "Made": "만듦",
+        "Make note": "노트 만들기",
+        "No sessions here": "세션이 없어요",
+        "Note": "노트",
+        "Open": "열기",
+        "Open the note made from it": "이 세션으로 만든 노트 열기",
+        "Pick a session for: %@": "이 지시에 쓸 세션을 고르세요: %@",
+        "Reading the session and asking the assistant…": "세션을 읽고 어시스턴트에게 묻는 중…",
+        "Refresh": "새로고침",
+        "Save": "저장",
+        "Saved": "저장했어요",
+        "Sessions on this computer, newest first": "이 컴퓨터의 세션, 최신순",
+        "That session isn't on this computer any more.": "그 세션이 더 이상 이 컴퓨터에 없어요.",
+        "The note goes here; it's written only when you save it.": "노트가 들어갈 곳이에요. 저장할 때만 써요.",
+        "Title": "제목",
+        "Untitled session": "제목 없는 세션",
+        "What to make of it": "무엇을 만들까요",
+        "just now": "방금"
+    }
+}
