@@ -102,6 +102,7 @@ func TestValidatePublishChecksTranslations(t *testing.T) {
 	for name, extra := range map[string]string{
 		"locales not an object":     `,"locales":123`,
 		"a language not an object":  `,"locales":{"ko":"안녕"}`,
+		"a language null":           `,"locales":{"ko":null}`,
 		"an unknown locale path":    `,"locales":{"ko":{"nickname":"x"}}`,
 		"strings not an object":     `,"strings":["x"]`,
 		"a translation's arguments": `,"strings":{"%@ items":"%lld개"}`,

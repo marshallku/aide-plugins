@@ -133,7 +133,13 @@ type Command struct {
 	// When is "note" for a command about the note on screen: offered only while one is, and run
 	// with its id in aide.surface.noteId. Empty: always offered.
 	When string `json:"when,omitempty"`
+	// Slash is the word that runs it from a capture field (Quick Capture, Scratch): `/<slash> text`
+	// runs it with the text in aide.surface.text. Empty: the palette only.
+	Slash string `json:"slash,omitempty"`
 }
+
+// slashPattern is a capture command's word: lowercase letters, digits and dashes, 1 to 24.
+var slashPattern = regexp.MustCompile(`^[a-z0-9][a-z0-9-]{0,23}$`)
 
 // maxCommands is how many palette entries one plugin may add.
 const maxCommands = 10
@@ -320,6 +326,9 @@ func commands(top map[string]json.RawMessage) ([]Command, error) {
 			return nil, fmt.Errorf("commands: %w", err)
 		}
 		if c.When, err = str(item, "when", false); err != nil {
+			return nil, fmt.Errorf("commands: %w", err)
+		}
+		if c.Slash, err = str(item, "slash", false); err != nil {
 			return nil, fmt.Errorf("commands: %w", err)
 		}
 		out = append(out, c)
@@ -521,7 +530,15 @@ func validateManifest(m Manifest) error {
 		return invalid("at most %d commands", maxCommands)
 	}
 	seenCommands := map[string]bool{}
+	seenSlashes := map[string]bool{}
 	for _, command := range m.Commands {
+		if command.Slash != "" {
+			// todo is the app's own (spec/tasks.md › Adding from a capture).
+			if !slashPattern.MatchString(command.Slash) || command.Slash == "todo" || seenSlashes[command.Slash] {
+				return invalid("command %s: slash is a new word of a-z, 0-9 and -, at most 24", command.ID)
+			}
+			seenSlashes[command.Slash] = true
+		}
 		if seenCommands[command.ID] {
 			return invalid("command ids must be unique")
 		}
@@ -660,7 +677,7 @@ func ValidID(id string) bool {
 // ValidCapability reports whether the app knows a capability.
 func ValidCapability(capability string) bool {
 	switch capability {
-	case "todos:read", "todos:write", "storage", "schedule", "attachments:read", "attachments:write":
+	case "todos:read", "todos:write", "storage", "schedule", "attachments:read", "attachments:write", "sessions:read", "ai:run":
 		return true
 	}
 	if host, ok := strings.CutPrefix(capability, "net:"); ok {

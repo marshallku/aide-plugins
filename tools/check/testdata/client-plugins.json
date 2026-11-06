@@ -660,6 +660,42 @@
       "publish": false
     },
     {
+      "name": "commands: a capture word",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [], \"commands\": [{\"id\": \"greet\", \"title\": \"Say hello\", \"slash\": \"hello-2\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": "6d785ea73751c5c2b55dae4478a62caa3e8e68ef30313f7a01d6b9ace3a60ad6",
+      "publish": true
+    },
+    {
+      "name": "commands: a capture word is lowercase letters, digits and dashes",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [], \"commands\": [{\"id\": \"greet\", \"title\": \"Say hello\", \"slash\": \"Hello\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "commands: todo is the app's own capture word",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [], \"commands\": [{\"id\": \"greet\", \"title\": \"Say hello\", \"slash\": \"todo\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
+      "name": "commands: capture words are unique",
+      "files": {
+        "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [], \"commands\": [{\"id\": \"a1\", \"title\": \"A\", \"slash\": \"same\"}, {\"id\": \"a2\", \"title\": \"B\", \"slash\": \"same\"}]}",
+        "main.js": "aide.onCommand('greet', () => {})\n"
+      },
+      "hash": null,
+      "publish": false
+    },
+    {
       "name": "panels: a right panel view (no tab needed)",
       "files": {
         "manifest.json": "{\"id\": \"hello\", \"name\": \"Hello\", \"version\": \"1.0.0\", \"description\": \"Says hello\", \"render\": \"web\", \"tabs\": [], \"capabilities\": [\"notes:read:*\"], \"panels\": [{\"id\": \"side\", \"title\": \"Side view\", \"icon\": \"star\"}]}",
