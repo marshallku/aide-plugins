@@ -292,6 +292,8 @@ CAPABILITIES = {
     "schedule": "Run at set times while AIDE is open on a computer",
     "attachments:read": "Read the images and documents your notes show",
     "attachments:write": "Add images and documents to your notes",
+    "sessions:read": "Read your Claude Code, Codex and Grok sessions on this computer",
+    "ai:run": "Ask this device's assistant, on your allowance",
 }
 
 
